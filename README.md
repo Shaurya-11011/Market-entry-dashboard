@@ -11,7 +11,7 @@ A data-driven dashboard built using Streamlit to evaluate potential market entry
 - Simple and clean UI with responsive visualizations.
 
 ## 📸 Preview
-![Dashboard Preview](screenshot.png)
+![Dashboard Preview](preview.png)
 
 ## 🛠️ Tech Stack
 - Streamlit
