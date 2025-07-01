@@ -3,7 +3,7 @@
 A data-driven dashboard built using Streamlit to evaluate potential market entry strategies using AI-generated consumer insights and trend analysis.
 
 ## 🔗 Live App
-[👉 Try the app](https://market-entry-dashboard.streamlit.app)
+[👉 View on Render](https://market-entry-dashboard.onrender.com)
 
 ## 💡 Features
 - Input competitor data, consumer sentiment, and growth signals.
