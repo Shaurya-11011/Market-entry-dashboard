@@ -1,51 +1,39 @@
 import streamlit as st
-from pytrends.request import TrendReq
 import pandas as pd
+import matplotlib.pyplot as plt
 
-# Page config
-st.set_page_config(page_title="Market Entry Dashboard", page_icon="📈", layout="centered")
+st.set_page_config(page_title="Market Entry Strategy Dashboard", layout="centered")
 
-# Stylish title and subheader
-st.title("AI-Driven Market Entry Strategy Dashboard")
-st.markdown("Gain insights from Google Trends and AI-generated recommendations to plan your market entry.")
+st.title("📊 Market Entry Strategy Dashboard")
+st.markdown("Analyze consumer trend data to identify high-potential markets.")
 
-# User input
-keyword = st.text_input("🔍 Enter a Product/Industry:", "Fitness Wearables")
+# Load cached Google Trends-style data
+@st.cache_data
+def load_data():
+    df = pd.read_csv("sample_trends_data.csv")
+    df["Month"] = pd.to_datetime(df["Month"])
+    return df
 
-if keyword:
-    st.markdown(f"### Google Trends Analysis for **'{keyword}'**")
+df = load_data()
 
-    # Google Trends Data
-    pytrends = TrendReq(hl='en-US', tz=360)
-    pytrends.build_payload([keyword], timeframe='today 12-m')
+# Dropdown to select trend focus
+keyword = st.selectbox("Choose your market trend:", df.columns[1:])
 
-    data = pytrends.interest_over_time()
+# Plot interest over time
+fig, ax = plt.subplots()
+ax.plot(df["Month"], df[keyword], marker='o', color='green')
+ax.set_title(f"Interest Over Time: {keyword}")
+ax.set_xlabel("Month")
+ax.set_ylabel("Search Interest")
+ax.grid(True)
+st.pyplot(fig)
 
-    if not data.empty:
-        st.line_chart(data[keyword])
-    else:
-        st.warning("No Google Trends data found. Try another keyword.")
-
-    # AI Placeholder Insight
-    st.markdown("### 🤖 AI-Generated Market Insights")
-    insight = f"""
-    The market for **'{keyword}'** shows a growing trend in search interest.
-    Emerging opportunities are noted in urban centers and tech-savvy demographics.
-    Suggested entry via e-commerce and influencer marketing to capitalize on early adopters.
-    """
-    st.info(insight)
-
-    # Market Entry Strategy
-    st.markdown("### 🚀 Recommended Market Entry Strategy")
-    st.success("""
-    1. Launch through online platforms first to minimize costs.
-    2. Collaborate with niche influencers for targeted reach.
-    3. Offer early bird discounts to attract first movers.
-    4. Expand to physical retail based on demand spikes.
-    """)
-
-# Footer
-st.markdown("---")
-st.caption("Built by Shaurya Jain • Market Insights Demo • 2025")
-
-
+# Show recommendation based on trend
+latest_value = df[keyword].iloc[-1]
+st.markdown("### 📈 AI Insight:")
+if latest_value > 85:
+    st.success(f"{keyword} shows a very strong upward trend — consider prioritizing this market!")
+elif latest_value > 70:
+    st.info(f"{keyword} is trending positively. Worth considering for entry.")
+else:
+    st.warning(f"{keyword} has a mild trend — proceed with deeper competitive analysis.")
